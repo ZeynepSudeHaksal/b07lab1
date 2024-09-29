@@ -1,25 +1,54 @@
+import java.io.File;
+
 public class Driver {
     public static void main(String[] args) {
-        Polynomial p = new Polynomial();
-        System.out.println(p.evaluate(3.0));  // Pass as double
+        // Test 1: Creating a polynomial from coefficients and exponents
+        double[] coefficients1 = {6, -2, 5};  // Represents 6 - 2x + 5x^3
+        int[] exponents1 = {0, 1, 3};
+        Polynomial poly1 = new Polynomial(coefficients1, exponents1);
+        System.out.println("Polynomial 1: " + polyToString(poly1));
 
-        double[] c1 = {6, 0, 0, 5}; // 5x^3 + 6
-        Polynomial p1 = new Polynomial(c1);
+        // Test 2: Creating a polynomial from a file
+        File file = new File("polynomial.txt");
+        Polynomial poly2 = new Polynomial(file);
+        System.out.println("Polynomial 2 from file: " + polyToString(poly2));
 
-        double[] c2 = {0, -2, 0, 0, -9}; // -9x^4 - 2x
-        Polynomial p2 = new Polynomial(c2);
+        // Test 3: Adding two polynomials
+        Polynomial sum = poly1.add(poly2);
+        System.out.println("Sum: " + polyToString(sum));
 
-        // Add p1 and p2
-        Polynomial s = p1.add(p2);
+        // Test 4: Multiplying two polynomials
+        Polynomial product = poly1.multiply(poly2);
+        System.out.println("Product: " + polyToString(product));
 
-        // Evaluate s at x = 0.1
-        System.out.println("s(0.1) = " + s.evaluate(0.1));
+        // Test 5: Evaluating a polynomial
+        double valueToEvaluate = 2.0;
+        double evaluationResult = poly1.evaluate(valueToEvaluate);
+        System.out.println("Evaluation of Polynomial 1 at x = " + valueToEvaluate + ": " + evaluationResult);
 
-        // Check if 1 is a root of s
-        if (s.hasRoot(1.0)) {  // Pass as double
-            System.out.println("1 is a root of s");
-        } else {
-            System.out.println("1 is not a root of s");
+        // Test 6: Checking for a root
+        boolean hasRoot = poly1.hasRoot(1.0);
+        System.out.println("Does Polynomial 1 have a root at x = 1.0? " + hasRoot);
+
+        // Test 7: Saving polynomial to a file
+        poly1.saveToFile("outputPolynomial.txt");
+    }
+
+    // Helper method to convert polynomial to a string representation
+    private static String polyToString(Polynomial poly) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < poly.coeff.length; i++) {
+            if (i > 0) {
+                result.append(poly.coeff[i] >= 0 ? "+" : "");
+            }
+            if (poly.exponents[i] == 0) {
+                result.append(poly.coeff[i]);
+            } else if (poly.coeff[i] == 1) {
+                result.append(poly.coeff[i]).append("x");
+            } else {
+                result.append(poly.coeff[i]).append("x").append(poly.exponents[i]);
+            }
         }
+        return result.toString();
     }
 }
